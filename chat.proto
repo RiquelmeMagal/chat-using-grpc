@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nome do pacote (opcional, mas recomendado)
+package chat;
+
+service ChatService {
+  // Método de chat bidirecional
+  rpc ChatStream(stream ChatMessage) returns (stream ChatMessage);
+}
+
+// Mensagem de chat
+message ChatMessage {
+  string user = 1;       // nome do usuário/origem
+  string text = 2;       // texto da mensagem
+  int64 timestamp = 3;   // timestamp (opcional)
+}
