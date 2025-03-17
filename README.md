@@ -42,8 +42,6 @@ git clone git@github.com:RiquelmeMagal/chat-using-grpc.git
 cd chat-using-gRPC
 ```
 
-> Substitua `SEU_USUARIO` ou use a URL correta caso seja outro repositório.
-
 ## 🐍 Criação do Ambiente Virtual
 
 Para isolar dependências, recomenda-se criar um **ambiente virtual** em Python.
