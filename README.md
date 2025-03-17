@@ -20,6 +20,7 @@ Cada participante se conecta a um **servidor gRPC** e inicia um **stream bidirec
 ├── chat_pb2_grpc.py     # Gerado automaticamente pelo protoc
 ├── chat_server.py        # Implementação do servidor gRPC
 ├── chat_client.py        # Implementação do cliente
+├── requirements.txt        # Importações
 └── README.md             # Este arquivo (documentação)
 ```
 
