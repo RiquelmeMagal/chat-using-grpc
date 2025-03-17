@@ -37,7 +37,9 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
                 # Se o cliente desconectar, isso gera exception. Apenas finalize.
                 print("[SERVER] Client disconnected.")
             finally:
-                client_queues.remove(q)
+                # Remove a fila deste cliente da lista global, se ainda estiver lá
+                if q in client_queues:
+                    client_queues.remove(q)
 
         # 3) Iniciamos a thread para consumir mensagens de entrada
         t = threading.Thread(target=receive_messages, daemon=True)
@@ -52,7 +54,8 @@ class ChatServiceServicer(chat_pb2_grpc.ChatServiceServicer):
         except GeneratorExit:
             # Quando o cliente encerrar o stream (desconectou),
             # 'GeneratorExit' é lançado. Limpamos recursos, se necessário.
-            client_queues.remove(q)
+            if q in client_queues:
+                client_queues.remove(q)
             print("[SERVER] Client stream closed.")
 
 def broadcast_message(msg):
@@ -68,12 +71,22 @@ def serve():
     server.add_insecure_port('[::]:50051')  # porta de escuta
     server.start()
     print("[SERVER] gRPC server rodando na porta 50051...")
+    print("[SERVER] Digite 'q' para encerrar o servidor.")
+
+    # Em vez de ficar bloqueado em um while True + time.sleep,
+    # agora ficamos aguardando um input 'q' para encerrar.
     try:
         while True:
-            time.sleep(86400)
-    except KeyboardInterrupt:
+            cmd = input()
+            if cmd.strip().lower() == 'q':
+                print("[SERVER] Encerrando servidor...")
+                break
+    except EOFError:
+        # Caso o input seja interrompido por EOF (Ctrl+D em alguns terminais), 
+        # também encerramos o servidor.
+        pass
+    finally:
         server.stop(0)
-        print("[SERVER] Encerrando servidor...")
 
 if __name__ == '__main__':
     serve()

@@ -4,6 +4,7 @@ import grpc
 import threading
 import chat_pb2
 import chat_pb2_grpc
+import os
 
 def generate_messages(username):
     """
@@ -12,6 +13,11 @@ def generate_messages(username):
     """
     while True:
         text = input()
+        # Caso o usuário digite /quit, encerramos a stream de forma limpa
+        if text.strip().lower() == '/quit':
+            print("[CLIENT] Encerrando cliente...")
+            os._exit(0)  # Força o encerramento imediato do processo
+
         yield chat_pb2.ChatMessage(
             user=username,
             text=text,
@@ -40,9 +46,8 @@ def run_client(username):
     t = threading.Thread(target=read_incoming_messages, daemon=True)
     t.start()
 
-    # Mantém o cliente ativo até que o usuário feche com Ctrl+C
-    # A função generate_messages() também está rodando, pedindo input.
-    print(f"[CLIENT] Bem-vindo(a), {username}! Digite suas mensagens:")
+    # Mantém o cliente ativo até que a thread se encerre
+    print(f"[CLIENT] Bem-vindo(a), {username}! Digite suas mensagens (ou /quit para sair):")
     t.join()  # Espera a thread de leitura terminar (ou interromper)
 
 if __name__ == '__main__':
