@@ -37,7 +37,7 @@ Cada participante se conecta a um **servidor gRPC** e inicia um **stream bidirec
 ## 📥 Clonando o repositório
 
 ```bash
-git clone https://github.com/SEU_USUARIO/chat-using-gRPC.git
+git clone git@github.com:RiquelmeMagal/chat-using-grpc.git
 cd chat-using-gRPC
 ```
 
